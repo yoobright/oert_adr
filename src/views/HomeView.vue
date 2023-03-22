@@ -7,13 +7,13 @@ import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 // import docSVG from '@/assets/logo.svg'
-import docSVG from '@/assets/undraw_doctors.svg'
+import docSVG from '@/assets/undraw_doctors.svg?component'
 import type { FormInstance, FormRules } from 'element-plus'
 
 const { t } = useI18n()
 
 const ruleFormRef = ref<FormInstance>()
-const labelPosition = ref('right')
+const labelPosition = ref<"top" | "right" | "left">('right')
 
 const screenWidth = ref(window.innerWidth);
 if (screenWidth.value < 480) {
@@ -92,7 +92,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       <el-row :gutter="20">
         <el-col :span="8" class="hidden-sm-and-down">
           <div class="svg-div">
-            <docSVG :height="540" :width="630" />
+            <docSVG height="540" width="630" />
         </div>
 
       </el-col>
