@@ -102,7 +102,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             <div style="height: 24px;"></div>
             <el-scrollbar style="height: calc(100vh - 300px); max-height: 600px;">
               <el-form class="m-form" ref="ruleFormRef" :model="ruleForm" :rules="rules" status-icon
-                label-width="140px">
+                :label-position="labelPosition" label-width="140px">
                 <el-row :gutter="5">
                   <el-col :md="8">
                     <el-form-item label="姓名" required prop="name">
@@ -261,8 +261,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                 </el-row>
               </el-form>
             </el-scrollbar>
-            <el-button @click="submitForm(ruleFormRef)" type="primary" style="margin-left: 140px; margin-top: 20px;">提交</el-button>
-            <el-button @click="resetForm(ruleFormRef)" style="margin-left: 20px; margin-top: 20px;">清空</el-button>
+            <div class="m-button-div">
+              <el-button @click="submitForm(ruleFormRef)" type="primary" >提交</el-button>
+              <el-button @click="resetForm(ruleFormRef)" >清空</el-button>
+            </div>
+
           </el-card>
         </el-col>
       </el-row>
@@ -342,9 +345,6 @@ html.dark .box-card {
   font-weight: bold;
 }
 
-
-
-
 .svg-div {
   display: flex;
   height: 100%;
@@ -353,6 +353,13 @@ html.dark .box-card {
 
 .m-form {
   padding-right: 40px;
+}
+.m-button-div {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
 }
 
 
