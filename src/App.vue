@@ -36,7 +36,7 @@ const changeLang = (lang: string) => {
 </script>
 
 <template>
-  <div class="navbar">
+  <el-header class="navbar">
     <!-- <img alt="Vue logo" class="logo" src="logoIcon" width="64" height="64" /> -->
     <div class="vertical-header-right">
       <el-form :inline="true">
@@ -53,7 +53,7 @@ const changeLang = (lang: string) => {
         </el-form-item>
       </el-form>
     </div>
-  </div>
+  </el-header >
   <el-config-provider :locale="localeELement">
     <RouterView />
   </el-config-provider>
@@ -69,6 +69,10 @@ const changeLang = (lang: string) => {
   height: 48px;
   overflow: hidden;
   width: 100%;
+  background-image: radial-gradient(transparent 1px, #ffffff 1px);
+  background-size: 4px 4px;
+  backdrop-filter: saturate(50%) blur(4px);
+  border-bottom: 1px solid #e4e7ed;
 }
 
 .navbar .vertical-header-right {
