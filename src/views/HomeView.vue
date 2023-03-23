@@ -461,7 +461,7 @@ html.dark .box-card {
   font-weight: normal;
 }
 
-.el-form-item__label {
+.box-card .el-form-item__label {
   font-weight: bold;
 }
 
