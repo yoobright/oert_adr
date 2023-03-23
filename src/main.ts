@@ -25,7 +25,11 @@ const i18n = createI18n({
 
 // import './assets/main.css'
 
-const app = createApp(App)
+const app = createApp(App, {
+  provide: {
+    baseUrl: import.meta.env.BASE_URL
+  }
+})
 
 app.use(createPinia())
 app.use(router)

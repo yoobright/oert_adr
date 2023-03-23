@@ -126,7 +126,9 @@ function genFeat(): number[] {
 async function initModel() {
   // create a session
   console.log("init onnx");
-  const session = await InferenceSession.create("model.onnx");
+  
+  // const session = await InferenceSession.create("model.onnx");
+  const session = await InferenceSession.create(`${import.meta.env.BASE_URL}model.onnx`);
   console.log("init model done");
   
 }

@@ -71,6 +71,7 @@ export default defineConfig({
     }
   },
   base: '/oert_adr/',
+  // publicPath: process.env.NODE_ENV === 'production' ? '/oert_adr/' : '/',
 
   build: {
     sourcemap: false,
