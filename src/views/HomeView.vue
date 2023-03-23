@@ -34,7 +34,7 @@ watchEffect(
   }
 )
 
-const ruleForm  = reactive({
+const ruleForm = reactive({
   name: '',
   id: '',
   tel: '',
@@ -55,11 +55,30 @@ const ruleForm  = reactive({
   rs1074287: "",
 })
 
+const checkAge = (rule: any, value: any, callback: any) => {
+  console.log('checkAge', value)
+  if (!value) {
+    return callback(new Error('Please input the age'))
+  }
+
+  if (!Number.isInteger(value)) {
+    callback(new Error('Please input digits'))
+  } else {
+    if (value < 18) {
+      callback(new Error('Age must >= 18'))
+    } else {
+      callback()
+    }
+  }
+}
+
+
 const rules = reactive<FormRules>({
   name: [
     { required: true, message: 'Please input Activity name', trigger: 'blur' },
     { min: 2, max: 32, message: 'Length should be 2 to 32', trigger: 'blur' },
   ],
+  age: [{ validator: checkAge, trigger: 'blur' }],
 })
 
 const resetForm = (formEl: FormInstance | undefined) => {
@@ -84,8 +103,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 <template>
   <el-main>
     <!-- <div class="header-div">
-          <h3>{{ t('test') }}</h3>
-        </div> -->
+            <h3>{{ t('test') }}</h3>
+          </div> -->
 
     <div class="main-div">
 
@@ -93,12 +112,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         <el-col :span="8" class="hidden-sm-and-down">
           <div class="svg-div">
             <docSVG height="540" width="630" />
-        </div>
+          </div>
 
-      </el-col>
-      <el-col :md="24" :lg="16">
-          <el-card class="box-card"  :body-style="{ 'min-width': '200px' }">
-            <template #header >{{ t('card_title') }}</template>
+        </el-col>
+        <el-col :md="24" :lg="16">
+          <el-card class="box-card" :body-style="{ 'min-width': '200px' }">
+            <template #header>{{ t('card_title') }}</template>
             <div style="height: 24px;"></div>
             <el-scrollbar style="height: calc(100vh - 300px); max-height: 600px;">
               <el-form class="m-form" ref="ruleFormRef" :model="ruleForm" :rules="rules" status-icon
@@ -121,24 +140,33 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                   </el-col>
                   <el-col :md="8">
                     <el-form-item label="性别" required prop="gender">
-                      <el-input v-model="ruleForm.gender" />
+                      <el-radio-group v-model="ruleForm.gender">
+                        <el-radio label="1">男</el-radio>
+                        <el-radio label="0">女</el-radio>
+                      </el-radio-group>
                     </el-form-item>
                   </el-col>
                   <el-col :md="8">
                     <el-form-item label="年龄" required prop="age">
-                      <el-input v-model="ruleForm.age" />
+                      <el-input type="number" min=0 max=120 v-model.number="ruleForm.age">
+                        <template #append>岁</template>
+                      </el-input>
                     </el-form-item>
                   </el-col>
                   <el-col :md="8">
                     <el-form-item label="身高" prop="height">
-                      <el-input v-model="ruleForm.height" />
+                      <el-input type="number" min=0 max=230 v-model.number="ruleForm.height">
+                        <template #append>cm</template>
+                      </el-input>
                     </el-form-item>
-                </el-col>
-                <el-col :md="8">
-                  <el-form-item label="体重" prop="weight">
-                    <el-input v-model="ruleForm.weight" />
-                  </el-form-item>
-                </el-col>
+                  </el-col>
+                  <el-col :md="8">
+                    <el-form-item label="体重" prop="weight">
+                      <el-input type="number" min=0 max=400 v-model.number="ruleForm.weight">
+                        <template #append>kg</template>
+                      </el-input>
+                    </el-form-item>
+                  </el-col>
                   <el-col :md="16">
                     <el-form-item label="原发肿瘤诊断" required prop="primary_tumor_diagnosis">
                       <el-input v-model="ruleForm.primary_tumor_diagnosis" />
@@ -185,7 +213,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                   </el-col>
                   <el-col :md="8">
                     <el-form-item label="疼痛强度" prop="pain_level">
-                      <el-input v-model="ruleForm.pain_level">
+                      <el-input type="number" min=0 max=10 v-model="ruleForm.pain_level">
                         <template #prepend>
                           NRS评分
                         </template>
@@ -262,8 +290,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
               </el-form>
             </el-scrollbar>
             <div class="m-button-div">
-              <el-button @click="submitForm(ruleFormRef)" type="primary" >提交</el-button>
-              <el-button @click="resetForm(ruleFormRef)" >清空</el-button>
+              <el-button @click="submitForm(ruleFormRef)" type="primary">提交</el-button>
+              <el-button @click="resetForm(ruleFormRef)">清空</el-button>
             </div>
 
           </el-card>
@@ -354,6 +382,7 @@ html.dark .box-card {
 .m-form {
   padding-right: 40px;
 }
+
 .m-button-div {
   margin-top: 20px;
   display: flex;
