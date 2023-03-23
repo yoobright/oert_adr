@@ -13,7 +13,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import type { Action } from 'element-plus'
 
 // onnx model
-import { InferenceSession, Tensor, env as ort_env} from 'onnxruntime-web'
+import { InferenceSession, Tensor, env as ort_env } from 'onnxruntime-web'
 
 const { t } = useI18n()
 
@@ -46,9 +46,9 @@ interface formData {
   id: string;
   tel: string;
   gender: string;
-  age: number;
-  height: number;
-  weight: number;
+  age: number | string;
+  height: number | string;
+  weight: number | string;
   primary_tumor_diagnosis: string;
   pain_type: string;
   pain_nature: string[];
@@ -67,9 +67,9 @@ const ruleForm: formData = reactive({
   id: '',
   tel: '',
   gender: '',
-  age: 0,
-  height: 0,
-  weight: 0,
+  age: '',
+  height: '',
+  weight: '',
   primary_tumor_diagnosis: '',
   pain_type: '',
   pain_nature: [],
@@ -134,10 +134,18 @@ async function initModel() {
   // const session = await InferenceSession.create("model.onnx");
   modelSession = await InferenceSession.create(`${import.meta.env.BASE_URL}model.onnx`)
   console.log("init model done");
-  
+
 }
 
 async function runModel(feat: number[]) {
+
+  if (!modelSession) {
+    console.log("model not init")
+    ElMessageBox.alert("模型尚未初始化", 'info', {
+      confirmButtonText: 'OK',
+    })
+    return
+  }
 
   console.log("run onnx")
   const inputDim = [1, 7]
@@ -187,13 +195,13 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 <template>
   <el-main>
     <!-- <div class="header-div">
-              <h3>{{ t('test') }}</h3>
-            </div> -->
+                <h3>{{ t('test') }}</h3>
+              </div> -->
 
     <div class="main-div">
 
       <el-row :gutter="20">
-        <el-col :span="8" class="hidden-sm-and-down">
+        <el-col :span="8" class="hidden-md-and-down">
           <div class="svg-div">
             <docSVG height="540" width="630" />
           </div>
@@ -207,22 +215,22 @@ const submitForm = async (formEl: FormInstance | undefined) => {
               <el-form class="m-form" ref="ruleFormRef" :model="ruleForm" :rules="rules" status-icon
                 :label-position="labelPosition" label-width="140px">
                 <el-row :gutter="5">
-                  <el-col :md="8">
+                  <el-col :sm="12" :md="8">
                     <el-form-item label="姓名" required prop="name">
                       <el-input v-model="ruleForm.name" />
                     </el-form-item>
                   </el-col>
-                  <el-col :md="8">
+                  <el-col :sm="12" :md="8">
                     <el-form-item label="ID" required prop="id">
                       <el-input v-model="ruleForm.id" />
                     </el-form-item>
                   </el-col>
-                  <el-col :md="8">
+                  <el-col :sm="12" :md="8">
                     <el-form-item label="联系电话" prop="tel">
                       <el-input v-model="ruleForm.tel" />
                     </el-form-item>
                   </el-col>
-                  <el-col :md="8">
+                  <el-col :sm="12" :md="8">
                     <el-form-item label="性别" required prop="gender">
                       <el-radio-group v-model="ruleForm.gender">
                         <el-radio label="1">男</el-radio>
@@ -230,21 +238,21 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
-                  <el-col :md="8">
+                  <el-col :sm="12" :md="8">
                     <el-form-item label="年龄" required prop="age">
                       <el-input type="number" min=0 max=120 v-model.number="ruleForm.age">
                         <template #append>岁</template>
                       </el-input>
                     </el-form-item>
                   </el-col>
-                  <el-col :md="8">
+                  <el-col :sm="12" :md="8">
                     <el-form-item label="身高" prop="height">
                       <el-input type="number" min=0 max=230 v-model.number="ruleForm.height">
                         <template #append>cm</template>
                       </el-input>
                     </el-form-item>
                   </el-col>
-                  <el-col :md="8">
+                  <el-col :sm="12" :md="8">
                     <el-form-item label="体重" prop="weight">
                       <el-input type="number" min=0 max=400 v-model.number="ruleForm.weight">
                         <template #append>kg</template>

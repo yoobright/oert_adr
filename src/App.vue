@@ -40,7 +40,7 @@ const changeLang = (lang: string) => {
     <!-- <img alt="Vue logo" class="logo" src="logoIcon" width="64" height="64" /> -->
     <div class="vertical-header-right">
       <el-form :inline="true">
-        <el-form-item label="Lang">
+        <el-form-item label="Lang" style="color: white !important;">
           <el-select v-model="region" @change="changeLang(region)" style="width: 98px">
             <el-option label="中文" value="zh" />
             <el-option label="English" value="en" />
@@ -69,10 +69,12 @@ const changeLang = (lang: string) => {
   height: 48px;
   overflow: hidden;
   width: 100%;
-  background-image: radial-gradient(transparent 1px, #ffffff 1px);
+  /* background-image: radial-gradient(transparent 1px, #ffffff 1px);
   background-size: 4px 4px;
-  backdrop-filter: saturate(50%) blur(4px);
-  border-bottom: 1px solid #e4e7ed;
+  backdrop-filter: saturate(50%) blur(4px); */
+  background-color: #409EFF;
+  border-bottom: 1px solid #337ecc;
+
 }
 
 .navbar .vertical-header-right {
