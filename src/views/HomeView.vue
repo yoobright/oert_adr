@@ -9,14 +9,18 @@ import { useI18n } from 'vue-i18n'
 // import docSVG from '@/assets/logo.svg'
 import docSVG from '@/assets/undraw_doctors.svg?component'
 import type { FormInstance, FormRules } from 'element-plus'
-import type { number } from '@intlify/core-base'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import type { Action } from 'element-plus'
+
 // onnx model
-import { InferenceSession, env as ort_env} from 'onnxruntime-web'
+import { InferenceSession, Tensor, env as ort_env} from 'onnxruntime-web'
 
 const { t } = useI18n()
 
 const ruleFormRef = ref<FormInstance>()
 const labelPosition = ref<"top" | "right" | "left">('right')
+
+let modelSession: InferenceSession
 
 const screenWidth = ref(window.innerWidth);
 if (screenWidth.value < 480) {
@@ -127,11 +131,39 @@ async function initModel() {
   // create a session
   console.log("init onnx");
   ort_env.wasm.wasmPaths = `${import.meta.env.BASE_URL}`
-  
   // const session = await InferenceSession.create("model.onnx");
-  const session = await InferenceSession.create(`${import.meta.env.BASE_URL}model.onnx`)
+  modelSession = await InferenceSession.create(`${import.meta.env.BASE_URL}model.onnx`)
   console.log("init model done");
   
+}
+
+async function runModel(feat: number[]) {
+
+  console.log("run onnx")
+  const inputDim = [1, 7]
+
+  const input0 = new Tensor(
+    new Float32Array(feat) /* data */,
+    inputDim /* dims */
+  );
+
+  const outputs = await modelSession.run({ input0: input0 }, {})
+  console.log("output", outputs)
+  const proba = outputs.probabilities.data[1] as number * 100
+
+  const outstr = `不良反应的预测概率为：${proba.toFixed(2)}%`
+  console.log(outstr)
+
+  ElMessageBox.alert(outstr, '不良反应预测', {
+
+    confirmButtonText: 'OK',
+    callback: (action: Action) => {
+      ElMessage({
+        type: 'info',
+        message: `action: ${action}`,
+      })
+    },
+  })
 }
 
 initModel();
@@ -141,7 +173,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       console.log('submit!')
-      console.log(genFeat())
+      const feat = genFeat()
+      runModel(feat)
 
     } else {
       console.log('error submit!', fields)
