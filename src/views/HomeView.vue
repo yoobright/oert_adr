@@ -195,8 +195,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 <template>
   <el-main>
     <!-- <div class="header-div">
-                <h3>{{ t('test') }}</h3>
-              </div> -->
+                  <h3>{{ t('test') }}</h3>
+                </div> -->
 
     <div class="main-div">
 
@@ -211,7 +211,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           <el-card class="box-card" :body-style="{ 'min-width': '200px' }">
             <template #header>{{ t('card_title') }}</template>
             <div style="height: 24px;"></div>
-            <el-scrollbar style="height: calc(100vh - 300px); max-height: 600px;">
+            <el-scrollbar style="height: calc(100vh - 300px); max-height: 600px; min-height: 300px;">
               <el-form class="m-form" ref="ruleFormRef" :model="ruleForm" :rules="rules" status-icon
                 :label-position="labelPosition" label-width="140px">
                 <el-row :gutter="5">
@@ -494,9 +494,13 @@ html.dark .box-card {
     padding: 0 !important;
   }
 
+  .box-card {
+    min-height: calc(100vh - 100px);
+  }
+
   .m-form {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 }
 </style>
