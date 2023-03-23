@@ -11,7 +11,7 @@ import docSVG from '@/assets/undraw_doctors.svg?component'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { number } from '@intlify/core-base'
 // onnx model
-import { InferenceSession } from 'onnxruntime-web'
+import { InferenceSession, env as ort_env} from 'onnxruntime-web'
 
 const { t } = useI18n()
 
@@ -126,9 +126,10 @@ function genFeat(): number[] {
 async function initModel() {
   // create a session
   console.log("init onnx");
+  ort_env.wasm.wasmPaths = `${import.meta.env.BASE_URL}`
   
   // const session = await InferenceSession.create("model.onnx");
-  const session = await InferenceSession.create(`${import.meta.env.BASE_URL}model.onnx`);
+  const session = await InferenceSession.create(`${import.meta.env.BASE_URL}model.onnx`)
   console.log("init model done");
   
 }
