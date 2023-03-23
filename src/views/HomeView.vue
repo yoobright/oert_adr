@@ -9,6 +9,9 @@ import { useI18n } from 'vue-i18n'
 // import docSVG from '@/assets/logo.svg'
 import docSVG from '@/assets/undraw_doctors.svg?component'
 import type { FormInstance, FormRules } from 'element-plus'
+import type { number } from '@intlify/core-base'
+// onnx model
+import { InferenceSession } from 'onnxruntime-web'
 
 const { t } = useI18n()
 
@@ -34,25 +37,46 @@ watchEffect(
   }
 )
 
-const ruleForm = reactive({
+interface formData {
+  name: string;
+  id: string;
+  tel: string;
+  gender: string;
+  age: number;
+  height: number;
+  weight: number;
+  primary_tumor_diagnosis: string;
+  pain_type: string;
+  pain_nature: string[];
+  pain_level: number;
+  cs_drugs: string;
+  bmi: string;
+  smoking_history: string;
+  kps: string;
+  opiate_tolerant: string;
+  serum_creatinine: string;
+  rs1074287: string;
+}
+
+const ruleForm: formData = reactive({
   name: '',
   id: '',
   tel: '',
   gender: '',
-  age: '',
-  height: '',
-  weight: '',
+  age: 0,
+  height: 0,
+  weight: 0,
   primary_tumor_diagnosis: '',
   pain_type: '',
   pain_nature: [],
-  pain_level: '',
-  cs_drugs: "",
-  bmi: "",
-  smoking_history: "",
-  kps: "",
-  opiate_tolerant: "",
-  serum_creatinine: "",
-  rs1074287: "",
+  pain_level: 0,
+  cs_drugs: '',
+  bmi: '',
+  smoking_history: '',
+  kps: '',
+  opiate_tolerant: '',
+  serum_creatinine: '',
+  rs1074287: '',
 })
 
 const checkAge = (rule: any, value: any, callback: any) => {
@@ -87,11 +111,35 @@ const resetForm = (formEl: FormInstance | undefined) => {
   formEl.resetFields()
 }
 
+function genFeat(): number[] {
+  const feat = []
+  feat.push(parseFloat(ruleForm.bmi))
+  feat.push(parseFloat(ruleForm.kps))
+  feat.push(parseFloat(ruleForm.opiate_tolerant))
+  feat.push(parseFloat(ruleForm.smoking_history))
+  feat.push(parseFloat(ruleForm.serum_creatinine))
+  feat.push(parseFloat(ruleForm.cs_drugs))
+  feat.push(parseFloat(ruleForm.rs1074287))
+  return feat
+}
+
+async function initModel() {
+  // create a session
+  console.log("init onnx");
+  const session = await InferenceSession.create("model.onnx");
+  console.log("init model done");
+  
+}
+
+initModel();
+
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
       console.log('submit!')
+      console.log(genFeat())
+
     } else {
       console.log('error submit!', fields)
     }
@@ -103,8 +151,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 <template>
   <el-main>
     <!-- <div class="header-div">
-            <h3>{{ t('test') }}</h3>
-          </div> -->
+              <h3>{{ t('test') }}</h3>
+            </div> -->
 
     <div class="main-div">
 
@@ -225,44 +273,44 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                   <el-col :md="8">
                     <el-form-item label="心脑血管系统药物" required prop="cs_drugs">
                       <el-radio-group v-model="ruleForm.cs_drugs">
-                        <el-radio label="1">是</el-radio>
-                        <el-radio label="0">否</el-radio>
+                        <el-radio label=1>是</el-radio>
+                        <el-radio label=0>否</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
                   <el-col :md="16">
                     <el-form-item label="BMI" required prop="bmi">
                       <el-radio-group v-model="ruleForm.bmi">
-                        <el-radio label="1">＜18.5</el-radio>
-                        <el-radio label="2">18.5~23.9</el-radio>
-                        <el-radio label="3">≥24</el-radio>
+                        <el-radio label=1>＜18.5</el-radio>
+                        <el-radio label=2>18.5~23.9</el-radio>
+                        <el-radio label=3>≥24</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
                   <el-col :md="8">
                     <el-form-item label="吸烟史(体能状况)" required prop="smoking_history">
                       <el-radio-group v-model="ruleForm.smoking_history">
-                        <el-radio label="1">是</el-radio>
-                        <el-radio label="0">否</el-radio>
+                        <el-radio label=1>是</el-radio>
+                        <el-radio label=0>否</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
                   <el-col :md="16">
                     <el-form-item label="KPS" required prop="kps">
                       <el-radio-group v-model="ruleForm.kps">
-                        <el-radio label="1">100</el-radio>
-                        <el-radio label="2">90</el-radio>
-                        <el-radio label="3">80</el-radio>
-                        <el-radio label="4">70</el-radio>
-                        <el-radio label="5">60</el-radio>
+                        <el-radio label=1>100</el-radio>
+                        <el-radio label=2>90</el-radio>
+                        <el-radio label=3>80</el-radio>
+                        <el-radio label=4>70</el-radio>
+                        <el-radio label=5>60</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
                   <el-col :md="8">
                     <el-form-item label="阿片类耐受" required prop="opiate_tolerant">
                       <el-radio-group v-model="ruleForm.opiate_tolerant">
-                        <el-radio label="1">是</el-radio>
-                        <el-radio label="0">否</el-radio>
+                        <el-radio label=1>是</el-radio>
+                        <el-radio label=0>否</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
@@ -270,9 +318,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                     <el-form-item label="血肌酐" required prop="serum_creatinine">
 
                       <el-radio-group v-model="ruleForm.serum_creatinine">
-                        <el-radio label="1">低于正常值</el-radio>
-                        <el-radio label="2">正常值</el-radio>
-                        <el-radio label="3">高于正常值</el-radio>
+                        <el-radio label=1>低于正常值</el-radio>
+                        <el-radio label=2>正常值</el-radio>
+                        <el-radio label=3>高于正常值</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
@@ -280,9 +328,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                     <el-form-item label="rs1074287" required prop="rs1074287">
 
                       <el-radio-group v-model="ruleForm.rs1074287">
-                        <el-radio label="1">AA</el-radio>
-                        <el-radio label="2">AG</el-radio>
-                        <el-radio label="3">GG</el-radio>
+                        <el-radio label=1>AA</el-radio>
+                        <el-radio label=2>AG</el-radio>
+                        <el-radio label=3>GG</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
