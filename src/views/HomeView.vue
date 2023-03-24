@@ -52,7 +52,7 @@ interface formData {
   primary_tumor_diagnosis: string;
   pain_type: string;
   pain_nature: string[];
-  pain_level: number;
+  pain_level: number | string;
   cs_drugs: string;
   bmi: string;
   smoking_history: string;
@@ -73,7 +73,7 @@ const ruleForm: formData = reactive({
   primary_tumor_diagnosis: '',
   pain_type: '',
   pain_nature: [],
-  pain_level: 0,
+  pain_level: '',
   cs_drugs: '',
   bmi: '',
   smoking_history: '',
@@ -107,6 +107,15 @@ const rules = reactive<FormRules>({
     { min: 2, max: 32, message: 'Length should be 2 to 32', trigger: 'blur' },
   ],
   age: [{ validator: checkAge, trigger: 'blur' }],
+  pain_level: [
+  { type: 'number', min: 0, max: 10, message: 'Number be 0 to 10', trigger: 'blur' },
+  ],
+  height: [
+    { type: 'number', min: 0, max: 250, message: 'Number be 0 to 250', trigger: 'blur' },
+  ],
+  weight: [
+    { type: 'number', min: 0, max: 500, message: 'Number be 0 to 500', trigger: 'blur' },
+  ],
 })
 
 const resetForm = (formEl: FormInstance | undefined) => {
@@ -195,8 +204,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 <template>
   <el-main>
     <!-- <div class="header-div">
-                    <h3>{{ t('test') }}</h3>
-                  </div> -->
+                          <h3>{{ t('test') }}</h3>
+                        </div> -->
 
     <div class="main-div">
 
@@ -209,7 +218,14 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         </el-col>
         <el-col :md="24" :lg="16">
           <el-card class="box-card" :body-style="{ 'min-width': '200px' }">
-            <template #header>{{ t('card_title') }}</template>
+            <template #header>
+              <div style="display: flex; align-items: center;">
+                <el-icon :size="24" style="margin-right: 10px;">
+                  <i-ep-edit />
+                </el-icon>
+                {{ t('card_title') }}
+              </div>
+            </template>
             <div style="height: 24px;"></div>
             <el-scrollbar style="height: calc(100vh - 300px); max-height: 600px; min-height: 300px;">
               <el-form class="m-form" ref="ruleFormRef" :model="ruleForm" :rules="rules" status-icon
@@ -483,9 +499,10 @@ html.dark .box-card {
 
 
 .box-card .el-form-item__label {
-    height: 24px;
-    line-height: 24px;
+  height: 24px;
+  line-height: 24px;
 }
+
 .box-card .el-card__header {
   font-weight: bold !important;
 }

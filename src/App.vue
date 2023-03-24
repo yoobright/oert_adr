@@ -56,7 +56,7 @@ const changeLang = (lang: string) => {
         </el-form-item>
       </el-form>
     </div>
-  </el-header >
+  </el-header>
   <el-config-provider :locale="localeELement">
     <RouterView />
   </el-config-provider>
@@ -103,11 +103,11 @@ const changeLang = (lang: string) => {
 @media only screen and (max-width: 480px) {
   .navbar {
     padding-left: 10px !important;
-    padding-right: 0px !important;
+    padding-right: 10px !important;
   }
+
   .navbar .vertical-header-right .el-form-item {
-    margin-right: 20px !important;
+    margin-right: 12px !important;
   }
 }
-
 </style>

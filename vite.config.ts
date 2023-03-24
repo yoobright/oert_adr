@@ -12,12 +12,13 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
+import { splitVendorChunkPlugin } from 'vite'
 
 import Inspect from 'vite-plugin-inspect'
 
 const pathSrc = path.resolve(__dirname, 'src')
 const pathResolve = (dir: string): string => {
-  return path.resolve(__dirname, ".", dir)
+  return path.resolve(__dirname, '.', dir)
 }
 
 // https://vitejs.dev/config/
@@ -29,6 +30,7 @@ export default defineConfig({
       gzipSize: true,
       brotliSize: true
     }),
+    splitVendorChunkPlugin(),
     AutoImport({
       // Auto import functions from Vue, e.g. ref, reactive, toRef...
       imports: ['vue'],
@@ -39,29 +41,29 @@ export default defineConfig({
 
         // Auto import icon components
         IconsResolver({
-          prefix: 'Icon',
-        }),
+          prefix: 'Icon'
+        })
       ],
 
-      dts: path.resolve(pathSrc, 'auto-imports.d.ts'),
+      dts: path.resolve(pathSrc, 'auto-imports.d.ts')
     }),
 
     Components({
       resolvers: [
         // Auto register icon components
         IconsResolver({
-          enabledCollections: ['ep'],
+          enabledCollections: ['ep']
         }),
         // Auto register Element Plus components
-        ElementPlusResolver(),
+        ElementPlusResolver()
       ],
 
-      dts: path.resolve(pathSrc, 'components.d.ts'),
+      dts: path.resolve(pathSrc, 'components.d.ts')
     }),
 
     Icons({
-      autoInstall: true,
-    }),
+      autoInstall: true
+    })
 
     // Inspect(),
   ],
@@ -73,23 +75,24 @@ export default defineConfig({
   base: '/oert_adr/',
   // publicPath: process.env.NODE_ENV === 'production' ? '/oert_adr/' : '/',
 
+  // optimizeDeps: {
+  //   include: ['onnxruntime-web']
+  // },
+
   build: {
     sourcemap: false,
     // 消除打包大小超过500kb警告
     // chunkSizeWarningLimit: 4000,
     rollupOptions: {
       input: {
-        index: pathResolve("index.html")
+        index: pathResolve('index.html')
       },
       // 静态资源分类打包
       output: {
-        chunkFileNames: "static/js/[name]-[hash].js",
-        entryFileNames: "static/js/[name]-[hash].js",
-        assetFileNames: "static/[ext]/[name]-[hash].[ext]"
-      },
-
+        chunkFileNames: 'static/js/[name]-[hash].js',
+        entryFileNames: 'static/js/[name]-[hash].js',
+        assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
+      }
     }
-  },
-
-
+  }
 })
