@@ -13,9 +13,12 @@ import en from './locales/en'
 import zh from './locales/zh'
 import { createI18n } from 'vue-i18n'
 
+// get navigator language
+const locale = navigator.language.split('-')[0]
+
 const i18n = createI18n({
   legacy: false,
-  locale: 'zh',
+  locale: locale,
   fallbackLocale: 'en',
   messages: {
     en,
