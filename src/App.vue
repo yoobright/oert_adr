@@ -17,6 +17,7 @@ const localeELement = ref(en)
 
 const { locale: i18nLang } = useI18n()
 const region = ref(i18nLang.value)
+console.log('i18nLang.value', i18nLang.value)
 
 const isDark = useDark()
 
@@ -41,9 +42,9 @@ const changeLang = (lang: string) => {
     <div class="vertical-header-right">
       <el-form :inline="true">
         <el-form-item label="Lang" style="color: white !important">
-          <el-select v-model="region" @change="changeLang(region)" style="width: 98px">
-            <el-option label="中文" value="zh" />
-            <el-option label="English" value="en" />
+          <el-select v-model="region" @change="changeLang(region)" style="width: 64px">
+            <el-option value="zh">中文</el-option>
+            <el-option value="en">English</el-option>
           </el-select>
         </el-form-item>
 
