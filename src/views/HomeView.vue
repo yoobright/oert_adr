@@ -213,7 +213,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
     <div class="main-div">
 
-      <el-row :gutter="20">
+      <el-row>
         <el-col :span="8" class="hidden-md-and-down">
           <div class="svg-div">
             <docSVG height="540" width="630" />
@@ -524,6 +524,11 @@ html.dark .box-card {
 
   .box-card {
     min-height: calc(100vh - 100px);
+  }
+
+  .main-div .el-row {
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
   .m-form {
