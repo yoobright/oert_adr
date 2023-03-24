@@ -195,6 +195,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
     } else {
       console.log('error submit!', fields)
+
+      // @ts-ignore
+      const firstField = Object.keys(fields)[0]
+      formEl.scrollToField(firstField)
     }
   })
 }
