@@ -13,11 +13,10 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 // @ts-ignore
 import en from 'element-plus/dist/locale/en.mjs'
 
-const region = ref('zh')
 const localeELement = ref(en)
 
 const { locale: i18nLang } = useI18n()
-
+const region = ref(i18nLang.value)
 
 const isDark = useDark()
 
