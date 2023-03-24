@@ -38,7 +38,9 @@ const changeLang = (lang: string) => {
 
 <template>
   <el-header class="navbar">
-    <!-- <img alt="Vue logo" class="logo" src="logoIcon" width="64" height="64" /> -->
+    <div class="vertical-header-left">
+      <img alt="logo" class="logo" src="@/assets/pills-64.png" width="32" height="32" />
+    </div>
     <div class="vertical-header-right">
       <el-form :inline="true">
         <el-form-item label="Lang" style="color: white !important">
@@ -75,8 +77,18 @@ const changeLang = (lang: string) => {
   backdrop-filter: saturate(50%) blur(4px); */
   background-color: #409EFF;
   border-bottom: 1px solid #337ecc;
+  display: flex;
 
 }
+
+.navbar .vertical-header-left {
+  align-items: center;
+  display: flex;
+  height: 48px;
+  min-width: 48px;
+  flex-grow: 1;
+}
+
 
 .navbar .vertical-header-right {
   align-items: center;
@@ -85,6 +97,17 @@ const changeLang = (lang: string) => {
   height: 48px;
   justify-content: flex-end;
   min-width: 280px;
+  margin-left: auto;
+}
+
+@media only screen and (max-width: 480px) {
+  .navbar {
+    padding-left: 10px !important;
+    padding-right: 0px !important;
+  }
+  .navbar .vertical-header-right .el-form-item {
+    margin-right: 20px !important;
+  }
 }
 
 </style>

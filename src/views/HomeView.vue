@@ -103,7 +103,7 @@ const checkAge = (rule: any, value: any, callback: any) => {
 
 const rules = reactive<FormRules>({
   name: [
-    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+    { required: true, message: 'Please input Name', trigger: 'blur' },
     { min: 2, max: 32, message: 'Length should be 2 to 32', trigger: 'blur' },
   ],
   age: [{ validator: checkAge, trigger: 'blur' }],
@@ -141,7 +141,7 @@ async function runModel(feat: number[]) {
 
   if (!modelSession) {
     console.log("model not init")
-    ElMessageBox.alert("模型尚未初始化", 'info', {
+    ElMessageBox.alert(t('model_not_loaded'), 'info', {
       confirmButtonText: 'OK',
     })
     return
@@ -159,10 +159,10 @@ async function runModel(feat: number[]) {
   console.log("output", outputs)
   const proba = outputs.probabilities.data[1] as number * 100
 
-  const outstr = `不良反应的预测概率为：${proba.toFixed(2)}%`
+  const outstr = `${t('result_statement')}${proba.toFixed(2)}%`
   console.log(outstr)
 
-  ElMessageBox.alert(outstr, '不良反应预测', {
+  ElMessageBox.alert(outstr, t('result_title'), {
 
     confirmButtonText: 'OK',
     callback: (action: Action) => {
@@ -195,8 +195,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 <template>
   <el-main>
     <!-- <div class="header-div">
-                  <h3>{{ t('test') }}</h3>
-                </div> -->
+                    <h3>{{ t('test') }}</h3>
+                  </div> -->
 
     <div class="main-div">
 
@@ -213,10 +213,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             <div style="height: 24px;"></div>
             <el-scrollbar style="height: calc(100vh - 300px); max-height: 600px; min-height: 300px;">
               <el-form class="m-form" ref="ruleFormRef" :model="ruleForm" :rules="rules" status-icon
-                :label-position="labelPosition" label-width="140px">
+                :label-position="labelPosition" label-width="160px">
                 <el-row :gutter="5">
                   <el-col :sm="12" :md="8">
-                    <el-form-item label="姓名" required prop="name">
+                    <el-form-item :label="t('name')" required prop="name">
                       <el-input v-model="ruleForm.name" />
                     </el-form-item>
                   </el-col>
@@ -226,88 +226,87 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                     </el-form-item>
                   </el-col>
                   <el-col :sm="12" :md="8">
-                    <el-form-item label="联系电话" prop="tel">
+                    <el-form-item :label="t('tel')" prop="tel">
                       <el-input v-model="ruleForm.tel" />
                     </el-form-item>
                   </el-col>
                   <el-col :sm="12" :md="8">
-                    <el-form-item label="性别" required prop="gender">
+                    <el-form-item :label="t('gender')" required prop="gender">
                       <el-radio-group v-model="ruleForm.gender">
-                        <el-radio label="1">男</el-radio>
-                        <el-radio label="0">女</el-radio>
+                        <el-radio label="1">{{ t('gender_p1') }}</el-radio>
+                        <el-radio label="0">{{ t('gender_p2') }}</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
                   <el-col :sm="12" :md="8">
-                    <el-form-item label="年龄" required prop="age">
+                    <el-form-item :label="t('age')" required prop="age">
                       <el-input type="number" min=0 max=120 v-model.number="ruleForm.age">
-                        <template #append>岁</template>
+                        <template #append>{{ t('year') }}</template>
                       </el-input>
                     </el-form-item>
                   </el-col>
                   <el-col :sm="12" :md="8">
-                    <el-form-item label="身高" prop="height">
+                    <el-form-item :label="t('height')" prop="height">
                       <el-input type="number" min=0 max=230 v-model.number="ruleForm.height">
                         <template #append>cm</template>
                       </el-input>
                     </el-form-item>
                   </el-col>
                   <el-col :sm="12" :md="8">
-                    <el-form-item label="体重" prop="weight">
+                    <el-form-item :label="t('weight')" prop="weight">
                       <el-input type="number" min=0 max=400 v-model.number="ruleForm.weight">
                         <template #append>kg</template>
                       </el-input>
                     </el-form-item>
                   </el-col>
                   <el-col :md="16">
-                    <el-form-item label="原发肿瘤诊断" required prop="primary_tumor_diagnosis">
+                    <el-form-item :label="t('primary_tumor_diagnosis')" required prop="primary_tumor_diagnosis">
                       <el-input v-model="ruleForm.primary_tumor_diagnosis" />
                     </el-form-item>
                   </el-col>
                   <el-col :md="24">
-                    <el-form-item label="疼痛类型" prop="pain_type">
+                    <el-form-item :label="t('pain_type')" prop="pain_type">
 
                       <el-radio-group v-model="ruleForm.pain_type">
-                        <el-radio label="1">躯体痛</el-radio>
-                        <el-radio label="2">内脏痛</el-radio>
-                        <el-radio label="3">神经痛</el-radio>
-                        <el-radio label="4">爆发痛</el-radio>
+                        <el-radio label="1">{{ t('pain_type_p1') }}</el-radio>
+                        <el-radio label="2">{{ t('pain_type_p2') }}</el-radio>
+                        <el-radio label="3">{{ t('pain_type_p3') }}</el-radio>
+                        <el-radio label="4">{{ t('pain_type_p4') }}</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
                   <el-col :md="24">
-                    <el-form-item label="疼痛性质" prop="pain_nature">
-
+                    <el-form-item :label="t('pain_nature')" prop="pain_nature">
                       <el-checkbox-group v-model="ruleForm.pain_nature">
-                        <el-checkbox label="1">酸痛</el-checkbox>
-                        <el-checkbox label="2">刺痛</el-checkbox>
-                        <el-checkbox label="3">跳痛</el-checkbox>
-                        <el-checkbox label="4">钝痛</el-checkbox>
-                        <el-checkbox label="5">绞痛</el-checkbox>
-                        <el-checkbox label="6">胀痛</el-checkbox>
-                        <el-checkbox label="7">坠痛</el-checkbox>
-                        <el-checkbox label="8">钻顶样痛</el-checkbox>
-                        <el-checkbox label="9">爆裂样痛</el-checkbox>
-                        <el-checkbox label="10">撕裂样痛</el-checkbox>
-                        <el-checkbox label="11">牵拉样痛</el-checkbox>
-                        <el-checkbox label="12">压榨样痛</el-checkbox>
-                        <el-checkbox label="13">放电样痛</el-checkbox>
-                        <el-checkbox label="14">烧灼样痛</el-checkbox>
-                        <el-checkbox label="15">麻木样痛</el-checkbox>
-                        <el-checkbox label="16">刀割样痛</el-checkbox>
-                        <el-checkbox label="17">轻触痛</el-checkbox>
-                        <el-checkbox label="18">无名痛</el-checkbox>
-                        <el-checkbox label="19">隐痛</el-checkbox>
-                        <el-checkbox label="20">尖锐痛</el-checkbox>
+                        <el-checkbox label="1">{{ t('pain_nature_p1') }}</el-checkbox>
+                        <el-checkbox label="2">{{ t('pain_nature_p2') }}</el-checkbox>
+                        <el-checkbox label="3">{{ t('pain_nature_p3') }}</el-checkbox>
+                        <el-checkbox label="4">{{ t('pain_nature_p4') }}</el-checkbox>
+                        <el-checkbox label="5">{{ t('pain_nature_p5') }}</el-checkbox>
+                        <el-checkbox label="6">{{ t('pain_nature_p6') }}</el-checkbox>
+                        <el-checkbox label="7">{{ t('pain_nature_p7') }}</el-checkbox>
+                        <el-checkbox label="8">{{ t('pain_nature_p8') }}</el-checkbox>
+                        <el-checkbox label="9">{{ t('pain_nature_p9') }}</el-checkbox>
+                        <el-checkbox label="10">{{ t('pain_nature_p10') }}</el-checkbox>
+                        <el-checkbox label="11">{{ t('pain_nature_p11') }}</el-checkbox>
+                        <el-checkbox label="12">{{ t('pain_nature_p12') }}</el-checkbox>
+                        <el-checkbox label="13">{{ t('pain_nature_p13') }}</el-checkbox>
+                        <el-checkbox label="14">{{ t('pain_nature_p14') }}</el-checkbox>
+                        <el-checkbox label="15">{{ t('pain_nature_p15') }}</el-checkbox>
+                        <el-checkbox label="16">{{ t('pain_nature_p16') }}</el-checkbox>
+                        <el-checkbox label="17">{{ t('pain_nature_p17') }}</el-checkbox>
+                        <el-checkbox label="18">{{ t('pain_nature_p18') }}</el-checkbox>
+                        <el-checkbox label="19">{{ t('pain_nature_p19') }}</el-checkbox>
+                        <el-checkbox label="20">{{ t('pain_nature_p20') }}</el-checkbox>
                       </el-checkbox-group>
 
                     </el-form-item>
                   </el-col>
                   <el-col :md="8">
-                    <el-form-item label="疼痛强度" prop="pain_level">
+                    <el-form-item :label="t('pain_level')" prop="pain_level">
                       <el-input type="number" min=0 max=10 v-model="ruleForm.pain_level">
                         <template #prepend>
-                          NRS评分
+                          NRS
                         </template>
                       </el-input>
                     </el-form-item>
@@ -315,10 +314,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                   <el-col :md="24"></el-col>
 
                   <el-col :md="8">
-                    <el-form-item label="心脑血管系统药物" required prop="cs_drugs">
+                    <el-form-item :label="t('cardiovascular_system_drugs')" required prop="cs_drugs">
                       <el-radio-group v-model="ruleForm.cs_drugs">
-                        <el-radio label=1>是</el-radio>
-                        <el-radio label=0>否</el-radio>
+                        <el-radio label=1>{{ t('yes') }}</el-radio>
+                        <el-radio label=0>{{ t('no') }}</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
@@ -332,10 +331,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                     </el-form-item>
                   </el-col>
                   <el-col :md="8">
-                    <el-form-item label="吸烟史(体能状况)" required prop="smoking_history">
+                    <el-form-item :label="t('smoking_history')" required prop="smoking_history">
                       <el-radio-group v-model="ruleForm.smoking_history">
-                        <el-radio label=1>是</el-radio>
-                        <el-radio label=0>否</el-radio>
+                        <el-radio label=1>{{ t('yes') }}</el-radio>
+                        <el-radio label=0>{{ t('no') }}</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
@@ -351,20 +350,20 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                     </el-form-item>
                   </el-col>
                   <el-col :md="8">
-                    <el-form-item label="阿片类耐受" required prop="opiate_tolerant">
+                    <el-form-item :label="t('opiate_tolerant')" required prop="opiate_tolerant">
                       <el-radio-group v-model="ruleForm.opiate_tolerant">
-                        <el-radio label=1>是</el-radio>
-                        <el-radio label=0>否</el-radio>
+                        <el-radio label=1>{{ t('yes') }}</el-radio>
+                        <el-radio label=0>{{ t('no') }}</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
                   <el-col :md="16">
-                    <el-form-item label="血肌酐" required prop="serum_creatinine">
+                    <el-form-item :label="t('serum_creatinine')" required prop="serum_creatinine">
 
                       <el-radio-group v-model="ruleForm.serum_creatinine">
-                        <el-radio label=1>低于正常值</el-radio>
-                        <el-radio label=2>正常值</el-radio>
-                        <el-radio label=3>高于正常值</el-radio>
+                        <el-radio label=1>{{ t('serum_creatinine_p1') }}</el-radio>
+                        <el-radio label=2>{{ t('serum_creatinine_p2') }}</el-radio>
+                        <el-radio label=3>{{ t('serum_creatinine_p3') }}</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
@@ -382,14 +381,13 @@ const submitForm = async (formEl: FormInstance | undefined) => {
               </el-form>
             </el-scrollbar>
             <div class="m-button-div">
-              <el-button @click="submitForm(ruleFormRef)" type="primary">提交</el-button>
-              <el-button @click="resetForm(ruleFormRef)">清空</el-button>
+              <el-button @click="submitForm(ruleFormRef)" type="primary">{{ t('submit') }}</el-button>
+              <el-button @click="resetForm(ruleFormRef)"> {{ t('reset') }}</el-button>
             </div>
 
           </el-card>
         </el-col>
       </el-row>
-
 
     </div>
   </el-main>
@@ -481,6 +479,15 @@ html.dark .box-card {
   justify-content: center;
   align-items: center;
   height: 50px;
+}
+
+
+.box-card .el-form-item__label {
+    height: 24px;
+    line-height: 24px;
+}
+.box-card .el-card__header {
+  font-weight: bold !important;
 }
 
 
