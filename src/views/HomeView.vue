@@ -52,7 +52,7 @@ interface formData {
   primary_tumor_diagnosis: string;
   pain_type: string;
   pain_nature: string[];
-  pain_level: number | string;
+  pain_level: number;
   cs_drugs: string;
   bmi: string;
   smoking_history: string;
@@ -73,7 +73,7 @@ const ruleForm: formData = reactive({
   primary_tumor_diagnosis: '',
   pain_type: '',
   pain_nature: [],
-  pain_level: '',
+  pain_level: 0,
   cs_drugs: '',
   bmi: '',
   smoking_history: '',
@@ -108,7 +108,7 @@ const rules = reactive<FormRules>({
   ],
   age: [{ validator: checkAge, trigger: 'blur' }],
   pain_level: [
-  { type: 'number', min: 0, max: 10, message: 'Number be 0 to 10', trigger: 'blur' },
+    { type: 'number', min: 0, max: 10, message: 'Number be 0 to 10', trigger: 'blur' },
   ],
   height: [
     { type: 'number', min: 0, max: 250, message: 'Number be 0 to 250', trigger: 'blur' },
@@ -208,8 +208,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 <template>
   <el-main>
     <!-- <div class="header-div">
-                          <h3>{{ t('test') }}</h3>
-                        </div> -->
+                            <h3>{{ t('test') }}</h3>
+                          </div> -->
 
     <div class="main-div">
 
@@ -322,13 +322,15 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
                     </el-form-item>
                   </el-col>
-                  <el-col :md="8">
+                  <el-col :md="16">
                     <el-form-item :label="t('pain_level')" prop="pain_level">
-                      <el-input type="number" min=0 max=10 v-model="ruleForm.pain_level">
-                        <template #prepend>
-                          NRS
-                        </template>
-                      </el-input>
+                      <!-- <el-input type="number" min=0 max=10 v-model="ruleForm.pain_level">
+                          <template #prepend>
+                            NRS
+                          </template>
+                        </el-input> -->
+
+                      <el-slider style="margin-left: 10px;" :max=10 v-model="ruleForm.pain_level" show-input />
                     </el-form-item>
                   </el-col>
                   <el-col :md="24"></el-col>
