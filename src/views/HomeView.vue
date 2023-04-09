@@ -50,7 +50,7 @@ interface formData {
   height: number | string;
   weight: number | string;
   primary_tumor_diagnosis: string;
-  pain_type: string;
+  pain_type: string[];
   pain_nature: string[];
   pain_level: number;
   cs_drugs: string;
@@ -71,7 +71,7 @@ const ruleForm: formData = reactive({
   height: '',
   weight: '',
   primary_tumor_diagnosis: '',
-  pain_type: '',
+  pain_type: [],
   pain_nature: [],
   pain_level: 0,
   cs_drugs: '',
@@ -241,12 +241,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                     </el-form-item>
                   </el-col>
                   <el-col :sm="12" :md="8">
-                    <el-form-item label="ID" required prop="id">
+                    <el-form-item label="ID" prop="id">
                       <el-input v-model="ruleForm.id" />
                     </el-form-item>
                   </el-col>
                   <el-col :sm="12" :md="8">
-                    <el-form-item :label="t('tel')" prop="tel">
+                    <el-form-item :label="t('tel')" required prop="tel">
                       <el-input v-model="ruleForm.tel" />
                     </el-form-item>
                   </el-col>
@@ -286,13 +286,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                   </el-col>
                   <el-col :md="24">
                     <el-form-item :label="t('pain_type')" prop="pain_type">
-
-                      <el-radio-group v-model="ruleForm.pain_type">
-                        <el-radio label="1">{{ t('pain_type_p1') }}</el-radio>
-                        <el-radio label="2">{{ t('pain_type_p2') }}</el-radio>
-                        <el-radio label="3">{{ t('pain_type_p3') }}</el-radio>
-                        <el-radio label="4">{{ t('pain_type_p4') }}</el-radio>
-                      </el-radio-group>
+                      <el-checkbox-group v-model="ruleForm.pain_type">
+                        <el-checkbox label="1">{{ t('pain_type_p1') }}</el-checkbox>
+                        <el-checkbox label="2">{{ t('pain_type_p2') }}</el-checkbox>
+                        <el-checkbox label="3">{{ t('pain_type_p3') }}</el-checkbox>
+                        <el-checkbox label="4">{{ t('pain_type_p4') }}</el-checkbox>
+                      </el-checkbox-group>
                     </el-form-item>
                   </el-col>
                   <el-col :md="24">
@@ -390,7 +389,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
                     </el-form-item>
                   </el-col>
                   <el-col :md="16">
-                    <el-form-item label="rs1074287" required prop="rs1074287">
+                    <el-form-item label="OPRM1(rs1074287)" required prop="rs1074287">
 
                       <el-radio-group v-model="ruleForm.rs1074287">
                         <el-radio label=1>AA</el-radio>
