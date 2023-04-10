@@ -2,7 +2,7 @@
 // import TheWelcome from '../components/TheWelcome.vue'
 import Vue from 'vue'
 import { ref, onMounted, watchEffect } from 'vue'
-import { reactive } from 'vue'
+import { reactive, toRaw } from 'vue'
 
 import { useI18n } from 'vue-i18n'
 
@@ -11,14 +11,18 @@ import docSVG from '@/assets/undraw_doctors.svg?component'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { Action } from 'element-plus'
+import _ from 'lodash'
 
 // onnx model
 import { InferenceSession, Tensor, env as ort_env } from 'onnxruntime-web'
+
+import { submitCaseData } from '@/api/case'
 
 const { t } = useI18n()
 
 const ruleFormRef = ref<FormInstance>()
 const labelPosition = ref<"top" | "right" | "left">('right')
+const proba = ref<number>(0)
 
 let modelSession: InferenceSession
 
@@ -43,16 +47,16 @@ watchEffect(
 
 interface formData {
   name: string;
-  id: string;
+  id?: string;
   tel: string;
   gender: string;
   age: number | string;
-  height: number | string;
-  weight: number | string;
+  height?: number | string;
+  weight?: number | string;
   primary_tumor_diagnosis: string;
-  pain_type: string[];
-  pain_nature: string[];
-  pain_level: number;
+  pain_type?: string[];
+  pain_nature?: string[];
+  pain_level?: number;
   cs_drugs: string;
   bmi: string;
   smoking_history: string;
@@ -61,6 +65,11 @@ interface formData {
   serum_creatinine: string;
   rs1074287: string;
 }
+
+interface submitData extends formData {
+  proba: number;
+}
+
 
 const ruleForm: formData = reactive({
   name: '',
@@ -166,10 +175,17 @@ async function runModel(feat: number[]) {
 
   const outputs = await modelSession.run({ input0: input0 }, {})
   console.log("output", outputs)
-  const proba = outputs.probabilities.data[1] as number * 100
-
-  const outstr = `${t('result_statement')}${proba.toFixed(2)}%`
+  proba.value = outputs.probabilities.data[1] as number
+  const outValue = (proba.value * 100).toFixed(2)
+  const outstr = `${t('result_statement')}${outValue}%`
   console.log(outstr)
+
+  const filteData = (data: Object) => {
+    return _.pickBy(data, (v, k) => {
+      return typeof v === 'number' || _.isEmpty(v) === false
+    })
+    
+  }
 
   ElMessageBox.alert(outstr, t('result_title'), {
 
@@ -178,6 +194,14 @@ async function runModel(feat: number[]) {
       ElMessage({
         type: 'info',
         message: `action: ${action}`,
+      })
+      console.log(ruleForm)
+      const data = toRaw(ruleForm)
+      const submitData = filteData(data) as submitData
+      submitData.proba = proba.value
+      console.log(submitData)
+      submitCaseData(submitData).then((res) => {
+        console.log(res)
       })
     },
   })

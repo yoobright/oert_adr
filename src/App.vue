@@ -13,6 +13,8 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 // @ts-ignore
 import en from 'element-plus/dist/locale/en.mjs'
 
+import { getHello } from '@/api/case'
+
 const localeELement = ref(en)
 
 const { locale: i18nLang } = useI18n()
@@ -34,12 +36,18 @@ const changeLang = (lang: string) => {
     localeELement.value = en
   }
 }
+
+const helloDemo = async () => {
+  console.log('helloDemo')
+  const res = await getHello()
+  console.log(res)
+}
 </script>
 
 <template>
   <el-header class="navbar">
     <div class="vertical-header-left">
-      <img alt="logo" class="logo" src="@/assets/pills-64.png" width="32" height="32" />
+      <img @click="helloDemo" alt="logo" class="logo" src="@/assets/pills-64.png" width="32" height="32" />
     </div>
     <div class="vertical-header-right">
       <el-form :inline="true">
